@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "466021977080",
+    "project_id": "information-board-97728",
+    "storage_bucket": "information-board-97728.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466021977080:android:9891008e5e48d60094640d",
+        "android_client_info": {
+          "package_name": "ru.ipimenov.informationboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466021977080-cb205dqcka5nr49qmd1l5sa8leopr28a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCybvczM8V2RXZF4el--LfchPyARsM5-pA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466021977080-cb205dqcka5nr49qmd1l5sa8leopr28a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Information Board</string>
+<!--  Menu Drawer Strings  -->
+    <string name="ads">Объявления</string>
+    <string name="ads_my_ads">Мои объявления</string>
+    <string name="ads_cars">Автомобили</string>
+    <string name="ads_pcs">Компьютеры</string>
+    <string name="ads_smartphones">Смартфоны</string>
+    <string name="ads_dms_appliances">Бытовая техника</string>
+    <string name="acc">Аккаунт</string>
+    <string name="acc_sign_up">Регистрация</string>
+    <string name="acc_sign_in">Вход</string>
+    <string name="acc_sign_out">Выход</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+</resources>
