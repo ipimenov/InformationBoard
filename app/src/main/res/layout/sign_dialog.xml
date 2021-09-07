@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/id_tv_sign_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/acc_sign_up"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/id_tv_dialog_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.13999999"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <EditText
+        android:id="@+id/id_et_sign_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="@string/email_hint"
+        android:importantForAutofill="no"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/id_et_sign_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/id_tv_dialog_message" />
+
+    <EditText
+        android:id="@+id/id_et_sign_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/password_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@id/id_bt_google_sign_in"
+        app:layout_constraintEnd_toEndOf="@+id/id_et_sign_email"
+        app:layout_constraintStart_toStartOf="@+id/id_et_sign_email"
+        app:layout_constraintTop_toBottomOf="@+id/id_et_sign_email" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/id_bt_google_sign_in"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/id_bt_sign_up_in"
+        app:layout_constraintEnd_toEndOf="@+id/id_et_sign_email"
+        app:layout_constraintStart_toStartOf="@+id/id_et_sign_email"
+        app:layout_constraintTop_toBottomOf="@+id/id_et_sign_password" />
+
+    <Button
+        android:id="@+id/id_bt_sign_up_in"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/sign_up_action"
+        app:backgroundTintMode="src_in"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/id_et_sign_email"
+        app:layout_constraintStart_toStartOf="@+id/id_et_sign_email"
+        app:layout_constraintTop_toBottomOf="@id/id_bt_google_sign_in" />
+
+    <Button
+        android:id="@+id/id_bt_forget_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/forget_password"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/id_et_sign_email"
+        app:layout_constraintStart_toStartOf="@+id/id_et_sign_email"
+        app:layout_constraintTop_toBottomOf="@+id/id_bt_sign_up_in" />
+
+    <TextView
+        android:id="@+id/id_tv_dialog_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="@string/email_reset_dialog_message"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/id_et_sign_email"
+        app:layout_constraintEnd_toEndOf="@+id/id_et_sign_email"
+        app:layout_constraintStart_toStartOf="@+id/id_et_sign_email"
+        app:layout_constraintTop_toBottomOf="@+id/id_tv_sign_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

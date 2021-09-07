@@ -1,17 +1,31 @@
 package ru.ipimenov.informationboard
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import ru.ipimenov.informationboard.accounthelper.AccountHelper
+import ru.ipimenov.informationboard.activitys.EditAdsActivity
 import ru.ipimenov.informationboard.databinding.ActivityMainBinding
+import ru.ipimenov.informationboard.dialoghelper.DialogHelper
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var tvAccountEmail: TextView
+    private val dialogHelper = DialogHelper(this)
+    val myAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +35,44 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         init()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.id_new_ads) {
+            val intent = Intent(this, EditAdsActivity::class.java)
+            startActivity(intent)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == AccountHelper.SIGN_IN_REQUEST_CODE) {
+//            Log.d("MyLog", "Sign in result")
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    Log.d("MyLog", "Api 0")
+                    dialogHelper.accountHelper.signInFirebaseWithGoogle(account.idToken!!)
+                }
+            } catch (e: ApiException) {
+                Log.d("MyLog", "Api error: ${e.message}")
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        uIUpdate(myAuth.currentUser)
+    }
+
     private fun init() {
         with(binding) {
+            setSupportActionBar(idMainContent.idToolbar)
             val toggle = ActionBarDrawerToggle(
                 this@MainActivity,
                 idDrawerLayout,
@@ -33,11 +83,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             idDrawerLayout.addDrawerListener(toggle)
             toggle.syncState()
             idNavView.setNavigationItemSelectedListener(this@MainActivity)
+            tvAccountEmail = idNavView.getHeaderView(0).findViewById(R.id.id_tv_account_email)
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.id_my_ads -> {
                 Toast.makeText(this, "Нажали id_my_ads", Toast.LENGTH_SHORT).show()
             }
@@ -54,16 +105,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(this, "Нажали id_dms_appliances", Toast.LENGTH_SHORT).show()
             }
             R.id.id_sign_up -> {
-                Toast.makeText(this, "Нажали id_sign_up", Toast.LENGTH_SHORT).show()
+                dialogHelper.createSignUpDialog()
             }
             R.id.id_sign_in -> {
-                Toast.makeText(this, "Нажали id_sign_in", Toast.LENGTH_SHORT).show()
+                dialogHelper.createSignInDialog()
             }
             R.id.id_sign_out -> {
-                Toast.makeText(this, "Нажали id_sign_out", Toast.LENGTH_SHORT).show()
+                uIUpdate(null)
+                myAuth.signOut()
+                dialogHelper.accountHelper.signOutGoogle()
             }
         }
         binding.idDrawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun uIUpdate(user: FirebaseUser?) {
+        tvAccountEmail.text = if (user == null) {
+            getString(R.string.acc_not_reg)
+        } else {
+            user.email
+        }
     }
 }

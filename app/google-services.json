@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "466021977080-4rjj3c0tu56089k0baifo1mt7fpv2o3s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.ipimenov.informationboard",
+            "certificate_hash": "355577fa9858947adea8a938d81eb3c92a00cd17"
+          }
+        },
+        {
           "client_id": "466021977080-cb205dqcka5nr49qmd1l5sa8leopr28a.apps.googleusercontent.com",
           "client_type": 3
         }

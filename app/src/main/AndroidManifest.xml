@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InformationBoard.NoActionBar">
         <activity
+            android:name=".activitys.EditAdsActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
