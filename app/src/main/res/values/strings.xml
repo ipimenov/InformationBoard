@@ -30,4 +30,8 @@
 
     <string name="link_done">Аккаунт успешно зарегистрирован и подключен к Google аккаунту</string>
     <string name="enter_to_google">Такой E-mail уже зарегистрирован, для добавления пароля войдите по Google аккаунту</string>
+
+    <!--  Edit Ads Activity  -->
+    <string name="select_country">*Выберите страну</string>
+    <string name="select_city">*Выберите город</string>
 </resources>
