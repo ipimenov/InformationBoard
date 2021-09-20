@@ -22,9 +22,11 @@ import android.R.attr.data
 
 import android.app.Activity
 import android.util.Log
+import ru.ipimenov.informationboard.fragments.CloseFragment
+import ru.ipimenov.informationboard.fragments.ImageListFragment
 
 
-class EditAdsActivity : AppCompatActivity() {
+class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = SpinnerDialogHelper()
@@ -43,9 +45,13 @@ class EditAdsActivity : AppCompatActivity() {
             if (data != null) {
                 val returnValue =
                     data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                Log.d("MyLog", "Image: ${returnValue?.get(0)}")
-                Log.d("MyLog", "Image: ${returnValue?.get(1)}")
-                Log.d("MyLog", "Image: ${returnValue?.get(2)}")
+                if (returnValue?.size!! > 1) {
+                    binding.svEditAds.visibility = View.GONE
+
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.place_holder, ImageListFragment(this, returnValue))
+                        .commit()
+                }
             }
         }
     }
@@ -60,7 +66,7 @@ class EditAdsActivity : AppCompatActivity() {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.getImages(this)
+                    ImagePicker.getImages(this, 3)
 //                    Pix.start(context, Options.init().setRequestCode(100))
                 } else {
                     Toast.makeText(
@@ -98,6 +104,12 @@ class EditAdsActivity : AppCompatActivity() {
     }
 
     fun onClickGetImages(view: View) {
-        ImagePicker.getImages(this)
+        ImagePicker.getImages(this, 3)
+
+//        ImagePicker.getImages(this)
+    }
+
+    override fun onCloseFragment() {
+        binding.svEditAds.visibility = View.VISIBLE
     }
 }
