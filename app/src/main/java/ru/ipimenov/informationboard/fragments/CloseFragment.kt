@@ -2,5 +2,5 @@ package ru.ipimenov.informationboard.fragments
 
 interface CloseFragment {
 
-    fun onCloseFragment()
+    fun onCloseFragment(imageList: ArrayList<ImageItem>)
 }

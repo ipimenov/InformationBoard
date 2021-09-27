@@ -1,35 +1,29 @@
 package ru.ipimenov.informationboard.activities
 
-import android.R.attr
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.fxn.pix.Pix
+import com.fxn.utility.PermUtil
 import ru.ipimenov.informationboard.R
+import ru.ipimenov.informationboard.adapters.ImagesViewPagerAdapter
 import ru.ipimenov.informationboard.databinding.ActivityEditAdsBinding
 import ru.ipimenov.informationboard.dialogs.SpinnerDialogHelper
-import ru.ipimenov.informationboard.utils.CityHelper
-import ru.ipimenov.informationboard.MainActivity
-
-import com.fxn.pix.Pix
-
-import android.content.pm.PackageManager
-
-import com.fxn.utility.PermUtil
-import ru.ipimenov.informationboard.utils.ImagePicker
-import android.R.attr.data
-
-import android.app.Activity
-import android.util.Log
 import ru.ipimenov.informationboard.fragments.CloseFragment
+import ru.ipimenov.informationboard.fragments.ImageItem
 import ru.ipimenov.informationboard.fragments.ImageListFragment
-
+import ru.ipimenov.informationboard.utils.CityHelper
+import ru.ipimenov.informationboard.utils.ImagePicker
 
 class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
+    private var imageListFragment: ImageListFragment? = null
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = SpinnerDialogHelper()
+    private lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,16 +35,26 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_GET_IMAGES) {
+
             if (data != null) {
+
                 val returnValue =
                     data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                if (returnValue?.size!! > 1) {
+
+                if (returnValue?.size!! > 1 && imageListFragment == null) {
+
+                    imageListFragment = ImageListFragment(this, returnValue)
                     binding.svEditAds.visibility = View.GONE
 
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.place_holder, ImageListFragment(this, returnValue))
+                        .replace(R.id.place_holder, imageListFragment!!)
                         .commit()
+
+                } else if (imageListFragment != null) {
+
+                    imageListFragment?.updateAdapter(returnValue)
                 }
             }
         }
@@ -82,6 +86,8 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     }
 
     private fun init() {
+        imagesViewPagerAdapter = ImagesViewPagerAdapter()
+        binding.vpImages.adapter = imagesViewPagerAdapter
     }
 
     // OnClicks
@@ -109,7 +115,9 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
 //        ImagePicker.getImages(this)
     }
 
-    override fun onCloseFragment() {
+    override fun onCloseFragment(newImageList: ArrayList<ImageItem>) {
         binding.svEditAds.visibility = View.VISIBLE
+        imagesViewPagerAdapter.update(newImageList)
+        imageListFragment = null
     }
 }

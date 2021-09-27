@@ -6,15 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.ipimenov.informationboard.R
+import ru.ipimenov.informationboard.databinding.FragmentImageListBinding
+import ru.ipimenov.informationboard.utils.ImagePicker
 import ru.ipimenov.informationboard.utils.ItemTouchMoveCallBack
 
 class ImageListFragment(private val closeFragment: CloseFragment, private val newList: ArrayList<String>) : Fragment() {
 
+    lateinit var binding: FragmentImageListBinding
     val adapter = SelectImageRVAdapter()
     val dragCallback = ItemTouchMoveCallBack(adapter)
     val touchHelper = ItemTouchHelper(dragCallback)
@@ -24,34 +28,56 @@ class ImageListFragment(private val closeFragment: CloseFragment, private val ne
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_image_list, container, false)
+        binding = FragmentImageListBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val btBack = view.findViewById<Button>(R.id.btBack)
-        val rvImageList = view.findViewById<RecyclerView>(R.id.rv_image_list)
-        touchHelper.attachToRecyclerView(rvImageList)
-        rvImageList.layoutManager = LinearLayoutManager(activity)
-        rvImageList.adapter = adapter
+        setUpToolbar()
+        touchHelper.attachToRecyclerView(binding.rvImageList)
+        binding.rvImageList.layoutManager = LinearLayoutManager(activity)
+        binding.rvImageList.adapter = adapter
         val updateList = ArrayList<ImageItem>()
         for (n in 0 until newList.size) {
             updateList.add(ImageItem(n.toString(), newList[n]))
         }
-        adapter.updateAdapter(updateList)
-        btBack.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.remove(this)
-                ?.commit()
-        }
+        adapter.updateAdapter(updateList, true)
     }
 
     override fun onDetach() {
         super.onDetach()
-        closeFragment.onCloseFragment()
-        Log.d("MyLog", "Title 0: ${adapter.imageList[0].title}")
-        Log.d("MyLog", "Title 1: ${adapter.imageList[1].title}")
-        Log.d("MyLog", "Title 2: ${adapter.imageList[2].title}")
+        closeFragment.onCloseFragment(adapter.imageList)
+    }
+
+    private fun setUpToolbar() {
+        binding.toolbar.inflateMenu(R.menu.menu_choose_images)
+        val deleteImages = binding.toolbar.menu.findItem(R.id.id_delete_images)
+        val addImages = binding.toolbar.menu.findItem(R.id.id_add_images)
+
+        binding.toolbar.setNavigationOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.remove(this)
+                ?.commit()
+        }
+
+        deleteImages.setOnMenuItemClickListener {
+            adapter.updateAdapter(ArrayList(), true)
+            true
+        }
+
+        addImages.setOnMenuItemClickListener {
+            val imageCounter = ImagePicker.MAX_IMAGE_COUNTER - adapter.imageList.size
+            ImagePicker.getImages(activity as AppCompatActivity, imageCounter)
+            true
+        }
+    }
+
+    fun updateAdapter(newList: ArrayList<String>) {
+        val updateList = ArrayList<ImageItem>()
+        for (n in adapter.imageList.size until newList.size + adapter.imageList.size) {
+            updateList.add(ImageItem(n.toString(), newList[n - adapter.imageList.size]))
+        }
+        adapter.updateAdapter(updateList, false)
     }
 }
