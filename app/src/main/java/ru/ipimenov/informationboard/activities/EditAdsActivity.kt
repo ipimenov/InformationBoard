@@ -13,7 +13,6 @@ import ru.ipimenov.informationboard.adapters.ImagesViewPagerAdapter
 import ru.ipimenov.informationboard.databinding.ActivityEditAdsBinding
 import ru.ipimenov.informationboard.dialogs.SpinnerDialogHelper
 import ru.ipimenov.informationboard.fragments.CloseFragment
-import ru.ipimenov.informationboard.fragments.ImageItem
 import ru.ipimenov.informationboard.fragments.ImageListFragment
 import ru.ipimenov.informationboard.utils.CityHelper
 import ru.ipimenov.informationboard.utils.ImagePicker
@@ -24,6 +23,7 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = SpinnerDialogHelper()
     private lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
+    var editImagePosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,17 +45,25 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
                 if (returnValue?.size!! > 1 && imageListFragment == null) {
 
-                    imageListFragment = ImageListFragment(this, returnValue)
-                    binding.svEditAds.visibility = View.GONE
+                    openImageListFragment(returnValue)
+                }
+                if (returnValue.size == 1 && imageListFragment == null) {
 
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.place_holder, imageListFragment!!)
-                        .commit()
-
-                } else if (imageListFragment != null) {
+                    imagesViewPagerAdapter.update(returnValue)
+                }
+                if (imageListFragment != null) {
 
                     imageListFragment?.updateAdapter(returnValue)
                 }
+            }
+        }
+        if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_GET_SINGLE_IMAGE) {
+
+            if (data != null) {
+
+                val uriImageStrings =
+                    data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
+                imageListFragment?.setSingleImage(uriImageStrings?.get(0)!!, editImagePosition)
             }
         }
     }
@@ -70,8 +78,7 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.getImages(this, 3)
-//                    Pix.start(context, Options.init().setRequestCode(100))
+                    ImagePicker.getImages(this, 3, ImagePicker.REQUEST_CODE_GET_IMAGES)
                 } else {
                     Toast.makeText(
                         this,
@@ -110,14 +117,25 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     }
 
     fun onClickGetImages(view: View) {
-        ImagePicker.getImages(this, 3)
-
-//        ImagePicker.getImages(this)
+        if (imagesViewPagerAdapter.imageList.size == 0) {
+            ImagePicker.getImages(this, 3, ImagePicker.REQUEST_CODE_GET_IMAGES)
+        } else {
+            openImageListFragment(imagesViewPagerAdapter.imageList)
+        }
     }
 
-    override fun onCloseFragment(newImageList: ArrayList<ImageItem>) {
+    override fun onCloseFragment(newImageList: ArrayList<String>) {
         binding.svEditAds.visibility = View.VISIBLE
         imagesViewPagerAdapter.update(newImageList)
         imageListFragment = null
+    }
+
+    private fun openImageListFragment(linkImageList: ArrayList<String>) {
+        imageListFragment = ImageListFragment(this, linkImageList)
+        binding.svEditAds.visibility = View.GONE
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.place_holder, imageListFragment!!)
+            .commit()
     }
 }

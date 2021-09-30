@@ -3,7 +3,7 @@ package ru.ipimenov.informationboard.utils
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemTouchMoveCallBack(val itemTouchAdapter: ItemTouchAdapter) : ItemTouchHelper.Callback() {
+class ItemTouchMoveCallBack(private val itemTouchAdapter: ItemTouchAdapter) : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,

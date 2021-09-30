@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import ru.ipimenov.informationboard.R
-import ru.ipimenov.informationboard.fragments.ImageItem
 
 class ImagesViewPagerAdapter : RecyclerView.Adapter<ImagesViewPagerAdapter.PagerViewHolder>() {
 
-    private val imageList = ArrayList<ImageItem>()
+    val imageList = ArrayList<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_pager_item, parent, false)
@@ -19,7 +18,7 @@ class ImagesViewPagerAdapter : RecyclerView.Adapter<ImagesViewPagerAdapter.Pager
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
-        holder.setData(imageList[position].imageUriString)
+        holder.setData(imageList[position])
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +36,7 @@ class ImagesViewPagerAdapter : RecyclerView.Adapter<ImagesViewPagerAdapter.Pager
 
     }
 
-    fun update(newImageList: ArrayList<ImageItem>) {
+    fun update(newImageList: ArrayList<String>) {
         imageList.clear()
         imageList.addAll(newImageList)
         notifyDataSetChanged()
