@@ -2,11 +2,11 @@ package ru.ipimenov.informationboard.activities
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.fxn.pix.Pix
 import com.fxn.utility.PermUtil
 import ru.ipimenov.informationboard.R
 import ru.ipimenov.informationboard.adapters.ImagesViewPagerAdapter
@@ -19,10 +19,10 @@ import ru.ipimenov.informationboard.utils.ImagePicker
 
 class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
-    private var imageListFragment: ImageListFragment? = null
+    var imageListFragment: ImageListFragment? = null
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = SpinnerDialogHelper()
-    private lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
+    lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
     var editImagePosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,37 +35,7 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_GET_IMAGES) {
-
-            if (data != null) {
-
-                val returnValue =
-                    data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-
-                if (returnValue?.size!! > 1 && imageListFragment == null) {
-
-                    openImageListFragment(returnValue)
-                }
-                if (returnValue.size == 1 && imageListFragment == null) {
-
-                    imagesViewPagerAdapter.update(returnValue)
-                }
-                if (imageListFragment != null) {
-
-                    imageListFragment?.updateAdapter(returnValue)
-                }
-            }
-        }
-        if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_GET_SINGLE_IMAGE) {
-
-            if (data != null) {
-
-                val uriImageStrings =
-                    data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                imageListFragment?.setSingleImage(uriImageStrings?.get(0)!!, editImagePosition)
-            }
-        }
+        ImagePicker.showSelectedImages(requestCode, resultCode, data, this)
     }
 
     override fun onRequestPermissionsResult(
@@ -120,17 +90,18 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
         if (imagesViewPagerAdapter.imageList.size == 0) {
             ImagePicker.getImages(this, 3, ImagePicker.REQUEST_CODE_GET_IMAGES)
         } else {
-            openImageListFragment(imagesViewPagerAdapter.imageList)
+            openImageListFragment(null)
+            imageListFragment?.updateAdapterFromEdit(imagesViewPagerAdapter.imageList)
         }
     }
 
-    override fun onCloseFragment(newImageList: ArrayList<String>) {
+    override fun onCloseFragment(imageList: ArrayList<Bitmap>) {
         binding.svEditAds.visibility = View.VISIBLE
-        imagesViewPagerAdapter.update(newImageList)
+        imagesViewPagerAdapter.update(imageList)
         imageListFragment = null
     }
 
-    private fun openImageListFragment(linkImageList: ArrayList<String>) {
+    fun openImageListFragment(linkImageList: ArrayList<String>?) {
         imageListFragment = ImageListFragment(this, linkImageList)
         binding.svEditAds.visibility = View.GONE
 

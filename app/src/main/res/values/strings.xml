@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Information Board</string>
+    <string name="ad_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_interstitial_id">ca-app-pub-3940256099942544/1033173712</string>
+
     <!--  Menu Drawer Strings  -->
     <string name="ads">Объявления</string>
     <string name="ads_my_ads">Мои объявления</string>

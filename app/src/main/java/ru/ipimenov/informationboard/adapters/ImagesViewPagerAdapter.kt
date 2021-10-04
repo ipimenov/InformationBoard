@@ -1,5 +1,6 @@
 package ru.ipimenov.informationboard.adapters
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import ru.ipimenov.informationboard.R
 
 class ImagesViewPagerAdapter : RecyclerView.Adapter<ImagesViewPagerAdapter.PagerViewHolder>() {
 
-    val imageList = ArrayList<String>()
+    val imageList = ArrayList<Bitmap>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_pager_item, parent, false)
@@ -29,14 +30,14 @@ class ImagesViewPagerAdapter : RecyclerView.Adapter<ImagesViewPagerAdapter.Pager
 
         lateinit var vPImageItem: ImageView
 
-        fun setData(uriString: String) {
+        fun setData(imageBitmap: Bitmap) {
             vPImageItem = itemView.findViewById(R.id.vp_image_item)
-            vPImageItem.setImageURI(Uri.parse(uriString))
+            vPImageItem.setImageBitmap(imageBitmap)
         }
 
     }
 
-    fun update(newImageList: ArrayList<String>) {
+    fun update(newImageList: List<Bitmap>) {
         imageList.clear()
         imageList.addAll(newImageList)
         notifyDataSetChanged()
