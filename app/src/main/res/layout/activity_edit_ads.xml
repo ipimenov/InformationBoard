@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.EditAdsActivity">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/sv_edit_ads"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,77 +19,382 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/gray_dark"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp">
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp">
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vp_images"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@android:drawable/editbox_background"
-                    android:padding="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp">
 
-                </androidx.viewpager2.widget.ViewPager2>
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/vp_images"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:padding="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:onClick="onClickGetImages"
-                    app:layout_constraintEnd_toEndOf="@+id/vp_images"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_edit" />
+                    </androidx.viewpager2.widget.ViewPager2>
 
-                <ProgressBar
-                    android:id="@+id/progress_bar_vp"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/vp_images"
-                    app:layout_constraintEnd_toEndOf="@+id/vp_images"
-                    app:layout_constraintStart_toStartOf="@+id/vp_images"
-                    app:layout_constraintTop_toTopOf="@+id/vp_images" />
+                    <ImageButton
+                        android:id="@+id/imageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/edit_image_button"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:onClick="onClickGetImages"
+                        android:padding="5dp"
+                        app:layout_constraintEnd_toEndOf="@+id/vp_images"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_edit" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ProgressBar
+                        android:id="@+id/progress_bar_vp"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@id/vp_images"
+                        app:layout_constraintEnd_toEndOf="@+id/vp_images"
+                        app:layout_constraintStart_toStartOf="@+id/vp_images"
+                        app:layout_constraintTop_toTopOf="@+id/vp_images" />
 
-            <TextView
-                android:id="@+id/tv_country"
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_title_country"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/country"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/tv_country"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:onClick="onClickSelectCountry"
+                        android:padding="10dp"
+                        android:text="@string/select_country"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="normal" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal" />
+
+                    <TextView
+                        android:id="@+id/tv_title_city"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/city"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/tv_city"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:onClick="onClickSelectCity"
+                        android:padding="10dp"
+                        android:text="@string/select_city"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="normal" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_title_tel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/tel"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/et_tel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/tel_hint"
+                        android:importantForAutofill="no"
+                        android:inputType="phone"
+                        android:minHeight="48dp"
+                        android:padding="10dp"
+                        android:textColorHint="@color/gray_dark" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal" />
+
+                    <TextView
+                        android:id="@+id/tv_title_index"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/index"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/et_index"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/index_hint"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:minHeight="48dp"
+                        android:padding="10dp"
+                        android:textColorHint="@color/gray_dark" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_title_send"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/send"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <CheckBox
+                        android:id="@+id/chb_with_send"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/with_send"
+                        android:textSize="18dp" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_category"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_title_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/category"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/tv_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:onClick="onClickSelectCategory"
+                        android:padding="10dp"
+                        android:text="@string/select_category"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="normal" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_01"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal" />
+
+                    <TextView
+                        android:id="@+id/tv_title_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/price"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/et_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/price_hint"
+                        android:importantForAutofill="no"
+                        android:inputType="phone"
+                        android:minHeight="48dp"
+                        android:padding="10dp"
+                        android:textColorHint="@color/gray_dark" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_02"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal" />
+
+                    <TextView
+                        android:id="@+id/tv_title_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/description"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/et_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/description_hint"
+                        android:importantForAutofill="no"
+                        android:inputType="textMultiLine"
+                        android:minHeight="48dp"
+                        android:padding="10dp"
+                        android:textColorHint="@color/gray_dark" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_03"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/bt_publish"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@android:drawable/editbox_background_normal"
-                android:gravity="center"
-                android:minHeight="48dp"
-                android:onClick="onClickSelectCountry"
-                android:padding="10dp"
-                android:text="@string/select_country"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/tv_city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@android:drawable/editbox_background_normal"
-                android:gravity="center"
-                android:minHeight="48dp"
-                android:onClick="onClickSelectCity"
-                android:padding="10dp"
-                android:text="@string/select_city"
-                android:textColor="@color/black" />
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="2dp"
+                android:backgroundTint="@color/white"
+                android:text="@string/publish"
+                android:textColor="@color/green_main"
+                app:cornerRadius="5dp" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </FrameLayout>

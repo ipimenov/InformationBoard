@@ -95,6 +95,13 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
         }
     }
 
+    fun onClickSelectCategory(view: View) {
+
+        val listOfCategories = resources.getStringArray(R.array.categories).toList() as ArrayList
+        dialog.spinnerDialogShow(this, listOfCategories, binding.tvCategory)
+
+    }
+
     override fun onCloseFragment(imageList: ArrayList<Bitmap>) {
         binding.svEditAds.visibility = View.VISIBLE
         imagesViewPagerAdapter.update(imageList)
