@@ -390,6 +390,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="2dp"
                 android:backgroundTint="@color/white"
+                android:onClick="onClickPublish"
                 android:text="@string/publish"
                 android:textColor="@color/green_main"
                 app:cornerRadius="5dp" />

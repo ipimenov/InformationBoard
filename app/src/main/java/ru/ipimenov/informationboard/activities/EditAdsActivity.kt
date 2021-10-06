@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.fxn.utility.PermUtil
 import ru.ipimenov.informationboard.R
 import ru.ipimenov.informationboard.adapters.ImagesViewPagerAdapter
+import ru.ipimenov.informationboard.data.Advertisement
+import ru.ipimenov.informationboard.database.DbManager
 import ru.ipimenov.informationboard.databinding.ActivityEditAdsBinding
 import ru.ipimenov.informationboard.dialogs.SpinnerDialogHelper
 import ru.ipimenov.informationboard.fragments.CloseFragment
@@ -23,6 +25,7 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = SpinnerDialogHelper()
     lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
+    private val dbManager = DbManager()
     var editImagePosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +96,28 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
             openImageListFragment(null)
             imageListFragment?.updateAdapterFromEdit(imagesViewPagerAdapter.imageList)
         }
+    }
+
+    fun onClickPublish(view: View) {
+        dbManager.publishAd(fillAdvertisement())
+    }
+
+    private fun fillAdvertisement(): Advertisement {
+        val advertisement: Advertisement
+        binding.apply {
+            advertisement = Advertisement(
+                tvCountry.text.toString(),
+                tvCity.text.toString(),
+                etTel.text.toString(),
+                etIndex.text.toString(),
+                chbWithSend.isChecked.toString(),
+                tvCategory.text.toString(),
+                etPrice.text.toString(),
+                etDescription.text.toString(),
+                dbManager.database.push().key
+            )
+        }
+        return advertisement
     }
 
     fun onClickSelectCategory(view: View) {

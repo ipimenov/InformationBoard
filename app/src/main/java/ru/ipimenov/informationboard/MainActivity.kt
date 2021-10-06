@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import ru.ipimenov.informationboard.accounthelper.AccountHelper
 import ru.ipimenov.informationboard.activities.EditAdsActivity
+import ru.ipimenov.informationboard.database.DbManager
 import ru.ipimenov.informationboard.databinding.ActivityMainBinding
 import ru.ipimenov.informationboard.dialoghelper.DialogHelper
 
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var tvAccountEmail: TextView
     private val dialogHelper = DialogHelper(this)
     val myAuth = FirebaseAuth.getInstance()
+    val dbManager = DbManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val view = binding.root
         setContentView(view)
         init()
+        dbManager.readDataFromDb()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
