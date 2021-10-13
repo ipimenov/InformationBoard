@@ -8,8 +8,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ru.ipimenov.informationboard.data.Advertisement
+import ru.ipimenov.informationboard.data.ReadDataCallback
 
-class DbManager {
+class DbManager(val readDataCallback: ReadDataCallback?) {
 
     val database = Firebase.database.getReference("main")
     val auth = Firebase.auth
@@ -28,10 +29,13 @@ class DbManager {
         database.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (i in snapshot.children) {
-                    val ad = i.children.iterator().next().child("ad").getValue(Advertisement::class.java)
-                    Log.d("MyLog", "Data: ${ad?.country}")
+                val advertList = ArrayList<Advertisement>()
+                for (advert in snapshot.children) {
+                    val ad = advert.children.iterator().next().child("ad").getValue(Advertisement::class.java)
+                    if (ad != null) advertList.add(ad)
+//                    Log.d("MyLog", "Data: ${ad?.country}")
                 }
+                readDataCallback?.readData(advertList)
             }
 
             override fun onCancelled(error: DatabaseError) {}

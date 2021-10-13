@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.fxn.utility.PermUtil
 import ru.ipimenov.informationboard.R
@@ -25,8 +26,10 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = SpinnerDialogHelper()
     lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
-    private val dbManager = DbManager()
+    private val dbManager = DbManager(null)
     var editImagePosition = 0
+    var launcherMultiSelectImages: ActivityResultLauncher<Intent>? = null
+    var launcherSingleSelectImage: ActivityResultLauncher<Intent>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +39,10 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
         init()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        ImagePicker.showSelectedImages(requestCode, resultCode, data, this)
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        ImagePicker.showSelectedImages(requestCode, resultCode, data, this)
+//    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -51,7 +54,7 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePicker.getImages(this, 3, ImagePicker.REQUEST_CODE_GET_IMAGES)
+//                    ImagePicker.getImages(this, 3, ImagePicker.REQUEST_CODE_GET_IMAGES)
                 } else {
                     Toast.makeText(
                         this,
@@ -68,6 +71,8 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     private fun init() {
         imagesViewPagerAdapter = ImagesViewPagerAdapter()
         binding.vpImages.adapter = imagesViewPagerAdapter
+        launcherMultiSelectImages = ImagePicker.getLauncherForMultiSelectImages(this)
+        launcherSingleSelectImage = ImagePicker.getLauncherForSingleSelectImage(this)
     }
 
     // OnClicks
@@ -91,7 +96,7 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
 
     fun onClickGetImages(view: View) {
         if (imagesViewPagerAdapter.imageList.size == 0) {
-            ImagePicker.getImages(this, 3, ImagePicker.REQUEST_CODE_GET_IMAGES)
+            ImagePicker.launch(this, launcherMultiSelectImages, 3)
         } else {
             openImageListFragment(null)
             imageListFragment?.updateAdapterFromEdit(imagesViewPagerAdapter.imageList)
@@ -112,9 +117,11 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
                 etIndex.text.toString(),
                 chbWithSend.isChecked.toString(),
                 tvCategory.text.toString(),
+                etName.text.toString(),
                 etPrice.text.toString(),
                 etDescription.text.toString(),
-                dbManager.database.push().key
+                dbManager.database.push().key,
+                dbManager.auth.uid
             )
         }
         return advertisement

@@ -45,6 +45,8 @@
     <string name="tel_hint">Номер телефона</string>
     <string name="category">*Категория</string>
     <string name="select_category">Выберите категорию</string>
+    <string name="name">*Название</string>
+    <string name="name_hint">Укажите название</string>
     <string name="price">*Цена</string>
     <string name="price_hint">Укажите цену</string>
     <string name="description">*Описание</string>
@@ -52,4 +54,7 @@
     <string name="with_send">С отправкой</string>
     <string name="send">Отправка</string>
     <string name="publish">Опубликовать</string>
+
+    <!--  Advert List Item  -->
+    <string name="title_price">Цена:</string>
 </resources>

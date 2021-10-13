@@ -55,7 +55,7 @@ class SelectImageRVAdapter(val adapterCallback: AdapterCallback) :
             binding.rvImageItem.setImageBitmap(itemBitmap)
 
             binding.btEditImage.setOnClickListener {
-                ImagePicker.getImages(context, 1, ImagePicker.REQUEST_CODE_GET_SINGLE_IMAGE)
+                ImagePicker.launch(context, context.launcherSingleSelectImage, 1)
                 context.editImagePosition = adapterPosition
             }
 

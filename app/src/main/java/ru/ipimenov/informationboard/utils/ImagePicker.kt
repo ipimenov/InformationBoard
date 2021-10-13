@@ -2,9 +2,13 @@ package ru.ipimenov.informationboard.utils
 
 import android.content.Intent
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.fxn.pix.Options
 import com.fxn.pix.Pix
+import com.fxn.utility.PermUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,45 +23,62 @@ object ImagePicker {
 
     private var job: Job? = null
 
-    fun getImages(context: AppCompatActivity, imageCounter: Int, requestCode: Int) {
+    private fun getOptions(imageCounter: Int): Options {
         val options = Options.init()
-            .setRequestCode(requestCode)                       //Request code for activity results
             .setCount(imageCounter)                                        //Number of images to restrict selection count
             .setFrontfacing(false)                                         //Front Facing camera on start
             .setMode(Options.Mode.Picture)                                 //Option to select only pictures or videos or both
             .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientation
             .setPath("/pix/images")                                        //Custom Path For media Storage
-
-        Pix.start(context, options)
+        return options
     }
 
-    fun showSelectedImages(requestCode: Int, resultCode: Int, data: Intent?, editAdsActivity: EditAdsActivity) {
-        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == REQUEST_CODE_GET_IMAGES) {
-            if (data != null) {
-                val imageUriStrings =
-                    data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                if (editAdsActivity.imageListFragment == null) {
-                    if (imageUriStrings?.size!! > 1) editAdsActivity.openImageListFragment(imageUriStrings)
-                    if (imageUriStrings.size == 1) {
-                        job = CoroutineScope(Dispatchers.Main).launch {
-                            editAdsActivity.binding.progressBarVp.visibility = View.VISIBLE
-                            val bitmapList = ImageManager.resizeImages(imageUriStrings)
-                            editAdsActivity.binding.progressBarVp.visibility = View.GONE
-                            editAdsActivity.imagesViewPagerAdapter.update(bitmapList)
+    fun launch(editAdsActivity: EditAdsActivity, launcher: ActivityResultLauncher<Intent>?, imageCounter: Int) {
+        PermUtil.checkForCamaraWritePermissions(editAdsActivity) {
+            val intent = Intent(editAdsActivity, Pix::class.java).apply {
+                putExtra("options", getOptions(imageCounter))
+            }
+            launcher?.launch(intent)
+        }
+
+    }
+
+    fun getLauncherForMultiSelectImages(editAdsActivity: EditAdsActivity): ActivityResultLauncher<Intent> {
+        return editAdsActivity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                if (result.data != null) {
+                    val imageUriStrings =
+                        result.data?.getStringArrayListExtra(Pix.IMAGE_RESULTS)
+                    if (editAdsActivity.imageListFragment == null) {
+                        if (imageUriStrings?.size!! > 1) editAdsActivity.openImageListFragment(
+                            imageUriStrings
+                        )
+                        if (imageUriStrings.size == 1) {
+                            job = CoroutineScope(Dispatchers.Main).launch {
+                                editAdsActivity.binding.progressBarVp.visibility = View.VISIBLE
+                                val bitmapList = ImageManager.resizeImages(imageUriStrings)
+                                editAdsActivity.binding.progressBarVp.visibility = View.GONE
+                                editAdsActivity.imagesViewPagerAdapter.update(bitmapList)
+                            }
                         }
-                    }
-                } else {
-                    if (imageUriStrings != null) {
-                        editAdsActivity.imageListFragment?.updateAdapter(imageUriStrings)
+                    } else {
+                        if (imageUriStrings != null) {
+                            editAdsActivity.imageListFragment?.updateAdapter(imageUriStrings)
+                        }
                     }
                 }
             }
         }
-        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_GET_SINGLE_IMAGE) {
-            if (data != null) {
-                val uriImageStrings =
-                    data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                editAdsActivity.imageListFragment?.setSingleImage(uriImageStrings?.get(0)!!, editAdsActivity.editImagePosition)
+    }
+
+    fun getLauncherForSingleSelectImage(editAdsActivity: EditAdsActivity): ActivityResultLauncher<Intent> {
+        return editAdsActivity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                if (it.data != null) {
+                    val imageUriString = it.data?.getStringArrayListExtra(Pix.IMAGE_RESULTS)
+                    editAdsActivity.imageListFragment?.setSingleImage(imageUriString?.get(0)!!, editAdsActivity.editImagePosition)
+                }
             }
         }
     }

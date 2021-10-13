@@ -312,7 +312,40 @@
                         android:orientation="horizontal" />
 
                     <TextView
-                        android:id="@+id/tv_title_price"
+                        android:id="@+id/tv_title_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/name"
+                        android:textColor="@color/green_main"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/et_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/name_hint"
+                        android:importantForAutofill="no"
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp"
+                        android:padding="10dp"
+                        android:textColorHint="@color/gray_dark" />
+
+                    <LinearLayout
+                        android:id="@+id/divider_02"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/green_main"
+                        android:orientation="horizontal" />
+
+                    <TextView
+                        android:id="@+id/tv_title_price2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="10dp"
@@ -336,7 +369,7 @@
                         android:textColorHint="@color/gray_dark" />
 
                     <LinearLayout
-                        android:id="@+id/divider_02"
+                        android:id="@+id/divider_03"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="10dp"
@@ -369,7 +402,7 @@
                         android:textColorHint="@color/gray_dark" />
 
                     <LinearLayout
-                        android:id="@+id/divider_03"
+                        android:id="@+id/divider_04"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="10dp"

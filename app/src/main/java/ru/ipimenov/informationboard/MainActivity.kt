@@ -10,24 +10,31 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import ru.ipimenov.informationboard.accounthelper.AccountHelper
 import ru.ipimenov.informationboard.activities.EditAdsActivity
+import ru.ipimenov.informationboard.adapters.AdvertListRVAdapter
+import ru.ipimenov.informationboard.data.Advertisement
+import ru.ipimenov.informationboard.data.ReadDataCallback
 import ru.ipimenov.informationboard.database.DbManager
 import ru.ipimenov.informationboard.databinding.ActivityMainBinding
 import ru.ipimenov.informationboard.dialoghelper.DialogHelper
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ReadDataCallback {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var tvAccountEmail: TextView
     private val dialogHelper = DialogHelper(this)
-    val myAuth = FirebaseAuth.getInstance()
-    val dbManager = DbManager()
+    val myAuth = Firebase.auth
+    val dbManager = DbManager(this)
+    val adapter = AdvertListRVAdapter(myAuth)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +42,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val view = binding.root
         setContentView(view)
         init()
+        initRecyclerView()
         dbManager.readDataFromDb()
     }
 
@@ -90,6 +98,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun initRecyclerView() {
+        binding.apply {
+            idMainContent.rvAdvertisements.layoutManager = LinearLayoutManager(this@MainActivity)
+            idMainContent.rvAdvertisements.adapter = adapter
+        }
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.id_my_ads -> {
@@ -129,5 +144,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             user.email
         }
+    }
+
+    override fun readData(advertList: List<Advertisement>) {
+        adapter.updateAdapter(advertList)
     }
 }
