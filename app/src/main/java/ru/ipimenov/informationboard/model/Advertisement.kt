@@ -1,4 +1,4 @@
-package ru.ipimenov.informationboard.data
+package ru.ipimenov.informationboard.model
 
 data class Advertisement(
     val country: String? = null,

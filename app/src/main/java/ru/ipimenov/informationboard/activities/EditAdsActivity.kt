@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.fxn.utility.PermUtil
 import ru.ipimenov.informationboard.R
 import ru.ipimenov.informationboard.adapters.ImagesViewPagerAdapter
-import ru.ipimenov.informationboard.data.Advertisement
-import ru.ipimenov.informationboard.database.DbManager
+import ru.ipimenov.informationboard.model.Advertisement
+import ru.ipimenov.informationboard.model.DbManager
 import ru.ipimenov.informationboard.databinding.ActivityEditAdsBinding
 import ru.ipimenov.informationboard.dialogs.SpinnerDialogHelper
 import ru.ipimenov.informationboard.fragments.CloseFragment
@@ -26,7 +26,7 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = SpinnerDialogHelper()
     lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
-    private val dbManager = DbManager(null)
+    private val dbManager = DbManager()
     var editImagePosition = 0
     var launcherMultiSelectImages: ActivityResultLauncher<Intent>? = null
     var launcherSingleSelectImage: ActivityResultLauncher<Intent>? = null
@@ -38,11 +38,6 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
         setContentView(view)
         init()
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        ImagePicker.showSelectedImages(requestCode, resultCode, data, this)
-//    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

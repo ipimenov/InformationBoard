@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import ru.ipimenov.informationboard.data.Advertisement
+import ru.ipimenov.informationboard.model.Advertisement
 import ru.ipimenov.informationboard.databinding.AdvertListItemBinding
 
 class AdvertListRVAdapter(val auth: FirebaseAuth) : RecyclerView.Adapter<AdvertListRVAdapter.AdvertHolder>() {
