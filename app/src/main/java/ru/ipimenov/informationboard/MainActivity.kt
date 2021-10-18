@@ -23,15 +23,16 @@ import ru.ipimenov.informationboard.activities.EditAdsActivity
 import ru.ipimenov.informationboard.adapters.AdvertListRVAdapter
 import ru.ipimenov.informationboard.databinding.ActivityMainBinding
 import ru.ipimenov.informationboard.dialoghelper.DialogHelper
+import ru.ipimenov.informationboard.model.Advertisement
 import ru.ipimenov.informationboard.viewmodel.FirebaseViewModel
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AdvertListRVAdapter.DeleteMyAdvertListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var tvAccountEmail: TextView
     private val dialogHelper = DialogHelper(this)
     val myAuth = Firebase.auth
-    val adapter = AdvertListRVAdapter(myAuth)
+    val adapter = AdvertListRVAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,20 +44,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         initRecyclerView()
         initViewModel()
         firebaseViewModel.loadAllAdverts()
+        onClickBottomNavigation()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.id_new_ads) {
-            val intent = Intent(this, EditAdsActivity::class.java)
-            startActivity(intent)
-        }
-        return super.onOptionsItemSelected(item)
+    override fun onResume() {
+        super.onResume()
+        binding.idMainContent.bottNavView.selectedItemId = R.id.id_home
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.main_menu, menu)
+//        return super.onCreateOptionsMenu(menu)
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == AccountHelper.SIGN_IN_REQUEST_CODE) {
@@ -99,6 +98,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toggle.syncState()
             idNavView.setNavigationItemSelectedListener(this@MainActivity)
             tvAccountEmail = idNavView.getHeaderView(0).findViewById(R.id.id_tv_account_email)
+        }
+    }
+
+    private fun onClickBottomNavigation() = binding.apply {
+        idMainContent.bottNavView.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.id_home -> {
+                    firebaseViewModel.loadAllAdverts()
+                    idMainContent.idToolbar.title = getString(R.string.ads_all_ads)
+                }
+                R.id.id_favorites -> {
+                    Toast.makeText(this@MainActivity, "Favourites", Toast.LENGTH_SHORT).show()
+                }
+                R.id.id_my_adverts -> {
+                    firebaseViewModel.loadMyAdverts()
+                    idMainContent.idToolbar.title = getString(R.string.ads_my_ads)
+                }
+                R.id.id_new_ad -> {
+                    val intent = Intent(this@MainActivity, EditAdsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
         }
     }
 
@@ -148,5 +170,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             user.email
         }
+    }
+
+    override fun onDeleteMyAdvert(advertisement: Advertisement) {
+        firebaseViewModel.deleteMyAdvert(advertisement)
     }
 }

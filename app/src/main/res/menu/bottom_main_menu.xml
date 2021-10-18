@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/id_home"
+        android:title="Home"
+        android:icon="@drawable/ic_home"
+        android:orderInCategory="10"/>
+    <item
+        android:id="@+id/id_favorites"
+        android:title="Favorites"
+        android:icon="@drawable/ic_favorite_normal"
+        android:orderInCategory="20"/>
+    <item
+        android:id="@+id/id_my_adverts"
+        android:title="My ads"
+        android:icon="@drawable/ic_my_adverts"
+        android:orderInCategory="30"/>
+    <item
+        android:id="@+id/id_new_ad"
+        android:title="New ad"
+        android:icon="@drawable/ic_new_ads"
+        android:orderInCategory="40"/>
+</menu>

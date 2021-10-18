@@ -27,9 +27,12 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     private val dialog = SpinnerDialogHelper()
     lateinit var imagesViewPagerAdapter: ImagesViewPagerAdapter
     private val dbManager = DbManager()
-    var editImagePosition = 0
     var launcherMultiSelectImages: ActivityResultLauncher<Intent>? = null
     var launcherSingleSelectImage: ActivityResultLauncher<Intent>? = null
+
+    var editImagePosition = 0
+    private var isEditState = false
+    private var advertisement: Advertisement? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,31 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
         val view = binding.root
         setContentView(view)
         init()
+        checkEditState()
+    }
+
+    private fun checkEditState() {
+        isEditState = isEditState()
+        if (isEditState) {
+            advertisement = intent.getSerializableExtra(ADVERT_DATA) as Advertisement
+            fillViews()
+        }
+    }
+
+    private fun isEditState(): Boolean {
+        return intent.getBooleanExtra(EDIT_STATE, false)
+    }
+
+    private fun fillViews() = with(binding) {
+        tvCountry.text = advertisement?.country
+        tvCity.text = advertisement?.city
+        etTel.setText(advertisement?.tel)
+        etIndex.setText(advertisement?.index)
+        chbWithSend.isChecked = advertisement?.withSend.toBoolean()
+        tvCategory.text = advertisement?.category
+        etName.setText(advertisement?.name)
+        etPrice.setText(advertisement?.price)
+        etDescription.setText(advertisement?.description)
     }
 
     override fun onRequestPermissionsResult(
@@ -99,7 +127,20 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
     }
 
     fun onClickPublish(view: View) {
-        dbManager.publishAd(fillAdvertisement())
+        val advertTemp = fillAdvertisement()
+        if (isEditState) {
+            dbManager.publishAd(advertTemp.copy(key = advertisement?.key), onPublishFinish())
+        } else {
+            dbManager.publishAd(advertTemp, onPublishFinish())
+        }
+    }
+
+    private fun onPublishFinish(): DbManager.FinishWorkListener {
+        return object : DbManager.FinishWorkListener {
+            override fun onFinish() {
+                finish()
+            }
+        }
     }
 
     private fun fillAdvertisement(): Advertisement {
@@ -142,5 +183,10 @@ class EditAdsActivity : AppCompatActivity(), CloseFragment {
         supportFragmentManager.beginTransaction()
             .replace(R.id.place_holder, imageListFragment!!)
             .commit()
+    }
+
+    companion object {
+        const val EDIT_STATE = "edit_state"
+        const val ADVERT_DATA = "advert_data"
     }
 }
