@@ -13,5 +13,12 @@ data class Advertisement(
     val price: String? = null,
     val description: String? = null,
     val key: String? = null,
-    val uid: String? = null
+    val uid: String? = null,
+
+    var isFavourite: Boolean = false,
+    var favouriteCounter: String = "0",
+
+    var viewsCounter: String = "0",
+    var emailsCounter: String = "0",
+    var callsCounter: String = "0"
 ) : Serializable

@@ -3,8 +3,8 @@ package ru.ipimenov.informationboard
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -26,7 +26,8 @@ import ru.ipimenov.informationboard.dialoghelper.DialogHelper
 import ru.ipimenov.informationboard.model.Advertisement
 import ru.ipimenov.informationboard.viewmodel.FirebaseViewModel
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AdvertListRVAdapter.DeleteMyAdvertListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    AdvertListRVAdapter.AdvertListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var tvAccountEmail: TextView
@@ -81,6 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun initViewModel() {
         firebaseViewModel.advertLiveData.observe(this, {
             adapter.updateAdapter(it)
+            binding.idMainContent.tvEmpty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
         })
     }
 
@@ -103,13 +105,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun onClickBottomNavigation() = binding.apply {
         idMainContent.bottNavView.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.id_home -> {
                     firebaseViewModel.loadAllAdverts()
                     idMainContent.idToolbar.title = getString(R.string.ads_all_ads)
                 }
                 R.id.id_favorites -> {
-                    Toast.makeText(this@MainActivity, "Favourites", Toast.LENGTH_SHORT).show()
+                    firebaseViewModel.loadMyFavouriteAdverts()
                 }
                 R.id.id_my_adverts -> {
                     firebaseViewModel.loadMyAdverts()
@@ -174,5 +176,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onDeleteMyAdvert(advertisement: Advertisement) {
         firebaseViewModel.deleteMyAdvert(advertisement)
+    }
+
+    override fun onAdvertViewed(advertisement: Advertisement) {
+        firebaseViewModel.advertViewed(advertisement)
+    }
+
+    override fun onClickedFavourite(advertisement: Advertisement) {
+        firebaseViewModel.onClickFavourite(advertisement)
     }
 }

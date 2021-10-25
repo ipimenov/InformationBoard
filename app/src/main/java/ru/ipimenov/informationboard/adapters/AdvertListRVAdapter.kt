@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import ru.ipimenov.informationboard.MainActivity
+import ru.ipimenov.informationboard.R
 import ru.ipimenov.informationboard.activities.EditAdsActivity
 import ru.ipimenov.informationboard.model.Advertisement
 import ru.ipimenov.informationboard.databinding.AdvertListItemBinding
@@ -45,7 +46,20 @@ class AdvertListRVAdapter(val mainActivity: MainActivity) :
             tvName.text = advertisement.name
             tvDescription.text = advertisement.description
             tvPrice.text = advertisement.price
+            tvViewCounter.text = advertisement.viewsCounter
+            tvFavouriteCounter.text = advertisement.favouriteCounter
+            if (advertisement.isFavourite) {
+                btFavourite.setImageResource(R.drawable.ic_favorite_pressed)
+            } else {
+                btFavourite.setImageResource(R.drawable.ic_favorite_normal)
+            }
             visibilityEditPanel(isOwner(advertisement))
+            btFavourite.setOnClickListener {
+                mainActivity.onClickedFavourite(advertisement)
+            }
+            itemView.setOnClickListener {
+                mainActivity.onAdvertViewed(advertisement)
+            }
             btEditAdvert.setOnClickListener(onClickEdit(advertisement))
             btDeleteAdvert.setOnClickListener {
                 mainActivity.onDeleteMyAdvert(advertisement)
@@ -75,7 +89,9 @@ class AdvertListRVAdapter(val mainActivity: MainActivity) :
         }
     }
 
-    interface DeleteMyAdvertListener {
+    interface AdvertListener {
         fun onDeleteMyAdvert(advertisement: Advertisement)
+        fun onAdvertViewed(advertisement: Advertisement)
+        fun onClickedFavourite(advertisement: Advertisement)
     }
 }
